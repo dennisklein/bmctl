@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.21', '1.22', '1.23', '1.24']
+        go-version: ['1.24']
         goos: [linux, darwin]
         goarch: [amd64, arm64]
       fail-fast: false
