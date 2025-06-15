@@ -35,4 +35,4 @@ go.work.sum
 # .idea/
 # .vscode/
 
-bmctl
+/bmctl
