@@ -11,6 +11,12 @@ import (
 	"syscall"
 )
 
+func assertNil(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 // Capture redirects the provided file's file descriptor (typically os.Stderr)
 // to a pipe, allowing all output written to that file descriptor to be captured.
 // It returns a function that, when called, restores the original file descriptor,
@@ -18,18 +24,26 @@ import (
 // for capturing and inspecting output during tests.
 func Capture(file *os.File) func() string {
 	stderrFd := int(file.Fd())
-	movedStderrFd, _ := syscall.Dup(stderrFd)
-	r, w, _ := os.Pipe()
-	syscall.Dup2(int(w.Fd()), stderrFd)
+	movedStderrFd, err := syscall.Dup(stderrFd)
+	assertNil(err)
+	r, w, err := os.Pipe()
+	assertNil(err)
+	err = syscall.Dup2(int(w.Fd()), stderrFd)
+	assertNil(err)
 
 	return func() string {
-		w.Close()
-		syscall.Dup2(movedStderrFd, stderrFd)
-		syscall.Close(movedStderrFd)
+		err = w.Close()
+		assertNil(err)
+		err = syscall.Dup2(movedStderrFd, stderrFd)
+		assertNil(err)
+		err = syscall.Close(movedStderrFd)
+		assertNil(err)
 
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
-		r.Close()
+		_, err = io.Copy(&buf, r)
+		assertNil(err)
+		err = r.Close()
+		assertNil(err)
 		return buf.String()
 	}
 }

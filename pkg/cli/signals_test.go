@@ -13,12 +13,15 @@ import (
 
 	_testing "github.com/GSI-HPC/bmctl/pkg/testing"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_SignalContext_CancelOnSignal(t *testing.T) {
 	ctx := SignalContext()
-	p, _ := os.FindProcess(os.Getpid())
-	p.Signal(syscall.SIGINT)
+	p, err := os.FindProcess(os.Getpid())
+	require.NoError(t, err)
+	err = p.Signal(syscall.SIGINT)
+	require.NoError(t, err)
 
 	select {
 	case <-ctx.Done():
@@ -31,10 +34,13 @@ func Test_SignalContext_CancelOnSignal(t *testing.T) {
 func Test_SignalContext_ForceShutdown(t *testing.T) {
 	if os.Getenv("FORK") == "1" {
 		ctx := SignalContext()
-		p, _ := os.FindProcess(os.Getpid())
-		p.Signal(syscall.SIGINT)
+		p, err := os.FindProcess(os.Getpid())
+		require.NoError(t, err)
+		err = p.Signal(syscall.SIGINT)
+		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
-		p.Signal(syscall.SIGINT)
+		err = p.Signal(syscall.SIGINT)
+		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 		<-ctx.Done()
 	}

@@ -14,8 +14,10 @@ import (
 
 func Test_RunForkTest_Success(t *testing.T) {
 	if os.Getenv("FORK") == "1" {
-		os.Stdout.WriteString("forked stdout\n")
-		os.Stderr.WriteString("forked stderr\n")
+		_, err := os.Stdout.WriteString("forked stdout\n")
+		require.NoError(t, err)
+		_, err = os.Stderr.WriteString("forked stderr\n")
+		require.NoError(t, err)
 		os.Exit(0)
 	}
 
