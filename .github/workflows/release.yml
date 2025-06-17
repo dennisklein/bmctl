@@ -60,7 +60,6 @@ jobs:
         cat << 'EOF' > Dockerfile
         FROM scratch
         COPY bmctl /bmctl
-        USER nonroot:nonroot
         ENTRYPOINT ["/bmctl"]
         EOF
 
