@@ -23,10 +23,8 @@ func logLevel() slog.Level {
 }
 
 func setupLogging(cmd *cobra.Command, args []string) {
-	opts := &slog.HandlerOptions{Level: logLevel()}
-	handler := slog.NewTextHandler(os.Stderr, opts)
-	logger := slog.New(handler)
-	ctx := _logging.WithLogger(cmd.Context(), logger)
+	logger := logging.NewLogger(logLevel())
+	ctx := logging.WithLogger(cmd.Context(), logger)
 	parent := cmd
 	for parent != nil {
 		parent.SetContext(ctx)

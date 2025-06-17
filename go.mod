@@ -7,6 +7,7 @@ module github.com/GSI-HPC/bmctl
 go 1.23.9
 
 require (
+	github.com/golang-cz/devslog v0.0.15
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sys v0.33.0
