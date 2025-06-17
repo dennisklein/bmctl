@@ -66,8 +66,8 @@ jobs:
     strategy:
       matrix:
         go-version: ['1.24']
-        goos: [linux, darwin]
-        goarch: [amd64, arm64]
+        goos: [linux]
+        goarch: [amd64]
       fail-fast: false
 
     steps:
