@@ -51,7 +51,7 @@ jobs:
           -buildvcs=true \
           -ldflags="-s -w" \
           -v \
-          -o bmctl
+          -o bmctl \
           ./cmd/bmctl
 
     - name: Create Dockerfile
