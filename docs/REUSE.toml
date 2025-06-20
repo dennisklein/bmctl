@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = ["**/*.md"]
+SPDX-FileCopyrightText = "2025 GSI Helmholtzzentrum für Schwerionenforschung GmbH <https://www.gsi.de/en/>"
+SPDX-License-Identifier = "CC0-1.0"
+
