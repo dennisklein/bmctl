@@ -9,7 +9,8 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-var terminationSignals = []os.Signal{unix.SIGTERM, unix.SIGINT}
+// terminationSignals defines the signals that trigger graceful shutdown.
+var terminationSignals = []os.Signal{unix.SIGTERM, unix.SIGINT} //nolint:gochecknoglobals
 
 // SignalContext returns a context that is canceled when a termination signal is received.
 // It listens for SIGTERM and SIGINT. On the first signal, the context is canceled with
@@ -17,6 +18,7 @@ var terminationSignals = []os.Signal{unix.SIGTERM, unix.SIGINT}
 // This allows for graceful shutdown on the first signal and forced termination on the second.
 func SignalContext() context.Context {
 	const limit = 2
+
 	signals := make(chan os.Signal, limit)
 	signal.Notify(signals, terminationSignals...)
 
@@ -28,9 +30,10 @@ func SignalContext() context.Context {
 			retries++
 			err := fmt.Errorf("got %d interrupts, forcing shutdown", retries)
 			cancel(err)
+
 			if retries >= limit {
 				fmt.Fprintln(os.Stderr, err)
-				os.Exit(EXIT_FAILURE)
+				os.Exit(ExitFailure)
 			}
 		}
 	}()

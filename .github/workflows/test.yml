@@ -3,20 +3,22 @@
 # SPDX-License-Identifier: CC0-1.0
 
 ---
-name: Build and Test
+name: Go
 
 on: [push, pull_request]
 
 permissions:
   contents: read
   checks: write
+  id-token: write
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.21', '1.22', '1.23', '1.24']
+        go-version: ['1.24']
       fail-fast: false
 
     steps:
@@ -51,6 +53,7 @@ jobs:
         report_paths: 'junit-report.xml'
 
   build:
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,6 +91,7 @@ jobs:
         retention-days: 30
 
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     strategy:
       matrix:

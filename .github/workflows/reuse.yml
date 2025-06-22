@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 ---
-name: REUSE Compliance Check
+name: REUSE
 
 on: [push, pull_request]
 
@@ -11,7 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  reuse-compliance-check:
+  compliance-check:
+    name: Compliance Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

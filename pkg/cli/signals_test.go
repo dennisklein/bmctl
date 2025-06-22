@@ -14,37 +14,40 @@ import (
 
 func Test_SignalContext_CancelOnSignal(t *testing.T) {
 	ctx := SignalContext()
-	p, err := os.FindProcess(os.Getpid())
+	process, err := os.FindProcess(os.Getpid())
 	require.NoError(t, err)
-	err = p.Signal(syscall.SIGINT)
+	err = process.Signal(syscall.SIGINT)
 	require.NoError(t, err)
 
 	select {
 	case <-ctx.Done():
-		// Success: context cancelled
+		// Success: context canceled
 	case <-time.After(1 * time.Second):
-		assert.Fail(t, "context was not cancelled after signal")
+		assert.Fail(t, "context was not canceled after signal")
 	}
 }
 
 func Test_SignalContext_ForceShutdown(t *testing.T) {
 	if os.Getenv("FORK") == "1" {
 		ctx := SignalContext()
-		p, err := os.FindProcess(os.Getpid())
+		process, err := os.FindProcess(os.Getpid())
 		require.NoError(t, err)
-		err = p.Signal(syscall.SIGINT)
+		err = process.Signal(syscall.SIGINT)
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
-		err = p.Signal(syscall.SIGINT)
+
+		err = process.Signal(syscall.SIGINT)
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 		<-ctx.Done()
 	}
 
 	stdout, stderr, err := _testing.RunForkTest("Test_SignalContext_ForceShutdown")
-	exiterr, ok := err.(*exec.ExitError)
-	assert.True(t, ok)
-	assert.Equal(t, exiterr.ExitCode(), EXIT_FAILURE)
+
+	var exiterr *exec.ExitError
+
+	require.ErrorAs(t, err, &exiterr)
+	assert.Equal(t, ExitFailure, exiterr.ExitCode())
 	assert.Contains(t, stderr, "got 2 interrupts, forcing shutdown")
 	assert.Empty(t, stdout)
 }

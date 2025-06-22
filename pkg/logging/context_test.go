@@ -1,7 +1,6 @@
 package logging
 
 import (
-	"context"
 	"log/slog"
 	"os"
 	"testing"
@@ -11,7 +10,7 @@ import (
 )
 
 func Test_WithLoggerAndFromContext(t *testing.T) {
-	ctx := context.Background()
+	ctx := t.Context()
 	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	ctxWithLogger := WithLogger(ctx, logger)
 	retrieved := FromContext(ctxWithLogger)
@@ -19,17 +18,17 @@ func Test_WithLoggerAndFromContext(t *testing.T) {
 }
 
 func Test_FromContextReturnsDefault(t *testing.T) {
-	ctx := context.Background()
+	ctx := t.Context()
 	retrieved := FromContext(ctx)
-	require.Same(t, slog.Default(), retrieved)
+	require.Same(t, Default(), retrieved)
 }
 
 func Test_WithLoggerIsContextSpecific(t *testing.T) {
-	ctx := context.Background()
+	ctx := t.Context()
 	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	ctxWithLogger := WithLogger(ctx, logger)
-	ctxWithoutLogger := context.Background()
+	ctxWithoutLogger := ctx
 
 	assert.Same(t, logger, FromContext(ctxWithLogger))
-	assert.Same(t, slog.Default(), FromContext(ctxWithoutLogger))
+	assert.Same(t, Default(), FromContext(ctxWithoutLogger))
 }
