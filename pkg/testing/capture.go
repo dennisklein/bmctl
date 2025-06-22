@@ -22,13 +22,13 @@ func Capture(file *os.File) func() string {
 	stderrFd := int(file.Fd())
 	movedStderrFd, err := syscall.Dup(stderrFd)
 	assertNil(err)
-	r, w, err := os.Pipe()
+	read, write, err := os.Pipe()
 	assertNil(err)
-	err = syscall.Dup2(int(w.Fd()), stderrFd)
+	err = syscall.Dup2(int(write.Fd()), stderrFd)
 	assertNil(err)
 
 	return func() string {
-		err = w.Close()
+		err = write.Close()
 		assertNil(err)
 		err = syscall.Dup2(movedStderrFd, stderrFd)
 		assertNil(err)
@@ -36,10 +36,11 @@ func Capture(file *os.File) func() string {
 		assertNil(err)
 
 		var buf bytes.Buffer
-		_, err = io.Copy(&buf, r)
+		_, err = io.Copy(&buf, read)
 		assertNil(err)
-		err = r.Close()
+		err = read.Close()
 		assertNil(err)
+
 		return buf.String()
 	}
 }

@@ -30,7 +30,7 @@ func SignalContext() context.Context {
 			cancel(err)
 			if retries >= limit {
 				fmt.Fprintln(os.Stderr, err)
-				os.Exit(EXIT_FAILURE)
+				os.Exit(ExitFailure)
 			}
 		}
 	}()

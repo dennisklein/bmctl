@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -15,8 +15,8 @@ func Test_ExecuteSuccess(t *testing.T) {
 	cmd := &cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {},
 	}
-	exit := Execute(context.Background(), cmd)
-	assert.Equal(t, EXIT_SUCCESS, exit)
+	exit := Execute(t.Context(), cmd)
+	assert.Equal(t, ExitSuccess, exit)
 	assert.Empty(t, getStderr())
 }
 
@@ -27,21 +27,19 @@ func Test_ExecuteSilentExit(t *testing.T) {
 			return &ErrSilentExit{Code: 42}
 		},
 	}
-	exit := Execute(context.Background(), cmd)
+	exit := Execute(t.Context(), cmd)
 	assert.Equal(t, 42, exit)
 	assert.Empty(t, getStderr())
 }
 
-// FIXME:
-// func Test_ExecuteError(t *testing.T) {
-//   ctx := context.Background()
-// 	getStderr := _testing.Capture(os.Stderr)
-// 	cmd := &cobra.Command{
-// 		RunE: func(cmd *cobra.Command, args []string) error {
-// 			return errors.New("fail")
-// 		},
-// 	}
-// 	exit := Execute(ctx, cmd)
-// 	assert.Equal(t, EXIT_FAILURE, exit)
-// 	assert.Contains(t, getStderr(), "ERROR fail\n")
-// }
+func Test_ExecuteError(t *testing.T) {
+	getStderr := _testing.Capture(os.Stderr)
+	cmd := &cobra.Command{
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return errors.New("fail")
+		},
+	}
+	exit := Execute(t.Context(), cmd)
+	assert.Equal(t, ExitFailure, exit)
+	assert.Contains(t, getStderr(), "ERR fail\n")
+}

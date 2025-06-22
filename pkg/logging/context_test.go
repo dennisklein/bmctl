@@ -21,7 +21,7 @@ func Test_WithLoggerAndFromContext(t *testing.T) {
 func Test_FromContextReturnsDefault(t *testing.T) {
 	ctx := context.Background()
 	retrieved := FromContext(ctx)
-	require.Same(t, slog.Default(), retrieved)
+	require.Same(t, Default(), retrieved)
 }
 
 func Test_WithLoggerIsContextSpecific(t *testing.T) {
@@ -31,5 +31,5 @@ func Test_WithLoggerIsContextSpecific(t *testing.T) {
 	ctxWithoutLogger := context.Background()
 
 	assert.Same(t, logger, FromContext(ctxWithLogger))
-	assert.Same(t, slog.Default(), FromContext(ctxWithoutLogger))
+	assert.Same(t, Default(), FromContext(ctxWithoutLogger))
 }

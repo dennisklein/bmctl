@@ -1,0 +1,36 @@
+version: "2"
+linters:
+  default: all
+  disable:
+    - depguard
+    - err113
+    - exhaustruct
+    - testpackage
+    - paralleltest
+    - wrapcheck
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    gocyclo:
+      min-complexity: 15
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    lll:
+      line-length: 120
+    misspell:
+      locale: US
+    revive:
+      severity: warning
+      rules:
+        - name: exported
+        - name: package-comments
+        - name: var-naming
+    varnamelen:
+      ignore-decls:
+        - t testing.T
+        - T any
+        - ok bool
+        - w http.ResponseWriter
+        - r *http.Request

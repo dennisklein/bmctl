@@ -44,7 +44,7 @@ func Test_SignalContext_ForceShutdown(t *testing.T) {
 	stdout, stderr, err := _testing.RunForkTest("Test_SignalContext_ForceShutdown")
 	exiterr, ok := err.(*exec.ExitError)
 	assert.True(t, ok)
-	assert.Equal(t, exiterr.ExitCode(), EXIT_FAILURE)
+	assert.Equal(t, exiterr.ExitCode(), ExitFailure)
 	assert.Contains(t, stderr, "got 2 interrupts, forcing shutdown")
 	assert.Empty(t, stdout)
 }
