@@ -1,7 +1,4 @@
-// SPDX-FileCopyrightText: 2025 GSI Helmholtzzentrum für Schwerionenforschung GmbH <https://www.gsi.de/en/>
-//
-// SPDX-License-Identifier: LGPL-3.0-or-later
-
+// Package main is the entry point for the bmctl command-line tool.
 package main
 
 import (
