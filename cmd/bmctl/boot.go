@@ -25,25 +25,29 @@ Limitations (currently):
 `,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ctx := cmd.Context()
-			img := args[0]
-
-			err := validateBmcClientConfig(bmcClientConfig)
-			if err != nil {
-				return err
-			}
-
-			client, err := bmc.NewClient(ctx, *bmcClientConfig)
-			if err != nil {
-				return err
-			}
-			defer client.Close()
-
-			return client.Boot(ctx, img)
+			return runBoot(cmd, args, bmcClientConfig)
 		},
 	}
 
 	addBmcClientConfigFlags(&cmd, bmcClientConfig)
 
 	return &cmd
+}
+
+func runBoot(cmd *cobra.Command, args []string, bmcClientConfig *bmc.ClientConfig) error {
+	ctx := cmd.Context()
+	img := args[0]
+
+	err := validateBmcClientConfig(bmcClientConfig)
+	if err != nil {
+		return err
+	}
+
+	client, err := bmc.NewClient(ctx, *bmcClientConfig)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+
+	return client.Boot(ctx, img)
 }
